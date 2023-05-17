@@ -5,16 +5,16 @@ import { useState, useEffect } from 'react'
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
 
 const Nav = () => {
-    const isUserLoggedIn = true
-    const [providers, setProvider] = useState(null)
+    const { data: session } = useSession()
+    const [providers, setProviders] = useState(null)
     const [toggleMenu, setToggleMenu] = useState(false)
 
     useEffect(() => {
-        const setProviders = async () => {
+        const setAuthProviders = async () => {
             const response = await getProviders()
             setProviders(response)
         }
-        setProvider()
+        setAuthProviders()
     }, []);
 
     return (
@@ -33,13 +33,13 @@ const Nav = () => {
             {/* Desktop*/}
 
             <div className='sm:flex hidden'>
-                {isUserLoggedIn ? (
+                {session?.user ? (
                     <div className='flex gap-3 md:gap-5'>
                         <Link href="/create-prompt" className='black_btn'> Create Prompt</Link>
                         <button type='button' onClick={() => { }} className='outline_btn'> Sign Out</button>
 
                         <Link href="/profile">
-                            <Image src="/assets/images/logo.svg"
+                            <Image src={session?.user.image}
                                 width={37}
                                 height={37}
                                 className='rounded-full'
@@ -69,9 +69,9 @@ const Nav = () => {
 
             {/* Mobile Navigation*/}
             <div className='sm:hidden flex relative'>
-                {isUserLoggedIn ? (
+                {session?.user ? (
                     <div className='flex'>
-                        <Image src="assets/images/logo.svg"
+                        <Image src={session?.user.image}
                             className='object-container'
                             alt="prompts"
                             width={30}
@@ -101,7 +101,7 @@ const Nav = () => {
                                     <button
                                         type='button'
                                         onClick={() => {
-                                            setToggleMenu(false);
+                                            setToggleMenu(false)
                                             signOut()
                                         }}
                                         className='mt-5 w-full black_btn'
