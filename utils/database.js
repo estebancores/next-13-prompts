@@ -1,4 +1,4 @@
-import mongoose from 'monogose'
+import mongoose from 'mongoose'
 
 let isConnected = false
 
