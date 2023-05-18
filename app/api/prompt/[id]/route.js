@@ -34,10 +34,17 @@ export const PATCH = async (req, { params }) => {
         await post.save()
         return new Response(JSON.stringify(post), { status: 200})    
     } catch(err) {
+        return new Response('Error updating prompt', { status: 500})    
 
     }
 }
 
-export const DELETE = async () => {
-
+export const DELETE = async (req, { params }) => {
+    try {
+        await connectToDb()
+        await Prompt.findByIdAndRemove(params.id)
+        return new Response('Post removed', { status: 200})    
+    } catch(err) {
+        return new Response('Error removing prompt', { status: 500})    
+    }
 }
